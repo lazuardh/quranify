@@ -94,7 +94,7 @@ class QuranifyTheme {
           : AppColors.brand.withOpacity(0.08),
 
       textTheme: theme.textTheme.copyWith().apply(
-        fontFamily: GoogleFonts.alatsi().fontFamily,
+        fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
       ),
     );
   }

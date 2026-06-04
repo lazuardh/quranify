@@ -12,12 +12,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(Duration(seconds: 3), () {
       if (!mounted) return;
-      Navigator.pushReplacement(
+      Navigator.of(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
     });
   }
 
@@ -28,18 +28,22 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Spacer(),
-          CustomSvgWrapper(svgPath: AppIcons.logos, isNetwork: false),
-          Spacer(),
+          const Spacer(),
+          const CustomSvgWrapper(
+            svgPath: AppIcons.logos,
+            isNetwork: false,
+            width: 300,
+            height: 300,
+          ),
+          const Spacer(),
           Padding(
             padding: EdgeInsetsGeometry.only(
-              bottom:
-                  ResponsiveUtils(context).getMediaQueryPaddingBottom() + 20,
+              bottom: MediaQuery.paddingOf(context).bottom + 20,
             ),
             child: Text(
-              TextConstant.createdBy,
+              TextConstant.version,
               style: AppTextStyle.bold.copyWith(
-                fontSize: 15,
+                fontSize: 12,
                 color: AppColors.brandTint,
               ),
             ),

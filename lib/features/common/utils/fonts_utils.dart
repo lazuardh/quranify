@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../lib.dart';
 
@@ -22,51 +21,44 @@ class AppFontWeight {
 class AppTextStyle {
   /// FontWeight.w300
 
-  static final TextStyle light = GoogleFonts.plusJakartaSans(
+  static const TextStyle light = TextStyle(
     fontSize: AppFontSize.normal,
     fontWeight: AppFontWeight.light,
-    color: TextFieldColors.text,
   );
 
   /// FontWeight.w400
-  static final TextStyle regular = GoogleFonts.plusJakartaSans(
+  static const TextStyle regular = TextStyle(
     fontSize: AppFontSize.normal,
     fontWeight: AppFontWeight.regular,
-    color: TextFieldColors.text,
   );
 
   /// FontWeight.w500
-  static final TextStyle medium = GoogleFonts.plusJakartaSans(
+  static const TextStyle medium = TextStyle(
     fontSize: AppFontSize.normal,
     fontWeight: AppFontWeight.medium,
-    color: TextFieldColors.text,
   );
 
   /// FontWeight.w600
-  static final TextStyle semiBold = GoogleFonts.plusJakartaSans(
+  static const TextStyle semiBold = TextStyle(
     fontSize: AppFontSize.normal,
     fontWeight: AppFontWeight.semiBold,
-    color: TextFieldColors.text,
   );
 
   /// FontWeight.w700
-  static final TextStyle bold = GoogleFonts.plusJakartaSans(
+  static const TextStyle bold = TextStyle(
     fontSize: AppFontSize.normal,
     fontWeight: AppFontWeight.bold,
-    color: TextFieldColors.text,
   );
 
   /// FontWeight.w800
-  static final TextStyle extraBold = GoogleFonts.plusJakartaSans(
+  static const TextStyle extraBold = TextStyle(
     fontSize: AppFontSize.normal,
     fontWeight: AppFontWeight.extraBold,
-    color: TextFieldColors.text,
   );
 
   /// FontWeight.w900
-  static final TextStyle black = GoogleFonts.plusJakartaSans(
+  static const TextStyle black = TextStyle(
     fontSize: AppFontSize.normal,
     fontWeight: AppFontWeight.black,
-    color: TextFieldColors.text,
   );
 }

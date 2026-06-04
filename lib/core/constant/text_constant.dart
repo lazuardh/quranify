@@ -1,3 +1,3 @@
 class TextConstant {
-  static const createdBy = 'Arasy Company';
+  static const version = 'Version 1.0';
 }
