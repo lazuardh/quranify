@@ -24,7 +24,7 @@ Quranify adalah aplikasi Al-Qur'an modern berbasis Flutter yang menyediakan peng
 
 ## 🎥 Demo
 
-[Watch Demo Video](https://youtube.com/your-demo-link)
+[Watch Demo Video](https://youtube.com)
 
 Atau gunakan GIF:
 
@@ -50,9 +50,7 @@ lib/
 * Dart
 * BLoC / Cubit
 * HTTP
-* SQLite
 * SharedPreferences
-* Firebase FCM
 * GetIt
 * Google Fonts
 
@@ -80,7 +78,7 @@ flutter run
 
 Download APK:
 
-https://your-apk-link.com
+https://tester.com
 
 ## 👨‍💻 Author
 
