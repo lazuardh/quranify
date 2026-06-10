@@ -1,0 +1,36 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../lib.dart';
+
+class AllSongsRepository with BaseRepository {
+  final AllSongsRemoteDataSource _remoteDataSource;
+
+  AllSongsRepository(this._remoteDataSource);
+
+  Future<Either<Failure, BaseApiResponseEntity<List<QuranEntity>>>>
+  getQuranApi() {
+    return catchOrThrow(() async {
+      final response = await _remoteDataSource.fetchDataApi();
+
+      print('this response ==> $response');
+
+      return BaseApiResponseEntity.fromBaseApiResponseModel(
+        response,
+        data: response.data?.map((e) => e.toEntity()).toList(),
+      );
+    });
+  }
+
+  Future<Either<Failure, BaseApiResponseEntity<SurahEntity>>> getSurahApi(
+    int? number,
+  ) {
+    return catchOrThrow(() async {
+      final response = await _remoteDataSource.fetchDataSurah(number);
+
+      return BaseApiResponseEntity.fromBaseApiResponseModel(
+        response,
+        data: response.data?.toEntity(),
+      );
+    });
+  }
+}

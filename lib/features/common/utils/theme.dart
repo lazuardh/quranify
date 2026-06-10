@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,90 +8,150 @@ class QuranifyTheme {
     final theme = Theme.of(context);
 
     return theme.copyWith(
-      primaryColor: AppColors.brand,
-      scaffoldBackgroundColor: AppColors.n50,
-      shadowColor: AppColors.n300,
-      disabledColor: AppColors.n400,
+      // Background
+      scaffoldBackgroundColor: AppColors.brand,
+
+      // Color Scheme
       colorScheme: theme.colorScheme.copyWith(
         primary: AppColors.brand,
-        secondary: AppColors.sky,
+        secondary: AppColors.secondary,
+        tertiary: AppColors.tertiary,
         error: AppColors.error,
-        surface: Colors.white,
+        surface: AppColors.surface,
+        onPrimary: AppColors.ink,
+        onSecondary: Colors.white,
+        onSurface: AppColors.ink,
       ),
 
-      iconTheme: theme.iconTheme.copyWith(color: AppColors.ink),
+      // General Colors
+      primaryColor: AppColors.brand,
+      shadowColor: AppColors.n800,
+      disabledColor: AppColors.n400,
 
-      floatingActionButtonTheme: theme.floatingActionButtonTheme.copyWith(
+      // Icons
+      iconTheme: const IconThemeData(color: AppColors.inkSoft, size: 24),
+
+      // AppBar
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.brand,
-        foregroundColor: Colors.white,
-      ),
-
-      appBarTheme: theme.appBarTheme.copyWith(
-        backgroundColor: Colors.white,
+        foregroundColor: AppColors.ink,
         centerTitle: true,
         elevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        scrolledUnderElevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
 
-      cardTheme: theme.cardTheme.copyWith(
-        elevation: 1,
-        shadowColor: AppColors.n300,
+      // Cards
+      cardTheme: CardThemeData(
+        color: AppColors.surface,
+        elevation: 0,
+        shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(12),
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: AppColors.n600),
         ),
       ),
 
-      dividerTheme: theme.dividerTheme.copyWith(color: AppColors.n200),
+      // Divider
+      dividerTheme: const DividerThemeData(color: AppColors.n600),
 
-      inputDecorationTheme: theme.inputDecorationTheme.copyWith(
+      // Text Field
+      inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: TextFieldColors.fill,
+
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
         ),
 
-        hintStyle: GoogleFonts.inter(color: AppColors.n500, fontSize: 14),
+        hintStyle: GoogleFonts.sora(color: TextFieldColors.hint, fontSize: 14),
+
+        labelStyle: GoogleFonts.sora(
+          color: TextFieldColors.label,
+          fontSize: 14,
+        ),
+
+        prefixIconColor: TextFieldColors.hint,
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.brand),
+          borderSide: BorderSide(color: TextFieldColors.enabledBorder),
         ),
 
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.brand, width: 2),
+          borderSide: BorderSide(
+            color: TextFieldColors.focusedBorder,
+            width: 2,
+          ),
         ),
 
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.error),
+          borderSide: BorderSide(color: TextFieldColors.errorBorder),
+        ),
+
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: TextFieldColors.errorBorder, width: 2),
         ),
       ),
 
+      // Elevated Button (Primary)
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.brand,
+          backgroundColor: AppColors.secondary,
           foregroundColor: Colors.white,
-          minimumSize: Size(double.infinity, 52),
+          minimumSize: const Size(double.infinity, 52),
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(12),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
 
-      splashColor: (kIsWeb || Platform.isAndroid)
-          // ignore: deprecated_member_use
-          ? AppColors.brand.withOpacity(0.08)
-          : Colors.transparent,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: AppColors.secondary,
+        linearTrackColor: AppColors.n600,
+        circularTrackColor: AppColors.n600,
+        borderRadius: BorderRadius.circular(10),
+      ),
 
-      highlightColor: (!kIsWeb && Platform.isAndroid)
-          ? Colors.transparent
-          // ignore: deprecated_member_use
-          : AppColors.brand.withOpacity(0.08),
+      // Outlined Button
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.ink,
+          side: const BorderSide(color: AppColors.n500),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
 
-      textTheme: theme.textTheme.copyWith().apply(
-        fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
+      // FAB
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: AppColors.secondary,
+        foregroundColor: Colors.white,
+      ),
+
+      // Ripple
+      splashColor: AppColors.secondary.withValues(alpha: 0.12),
+
+      highlightColor: Colors.transparent,
+
+      // Typography
+      textTheme: GoogleFonts.soraTextTheme(theme.textTheme).copyWith(
+        headlineLarge: GoogleFonts.sora(
+          color: AppColors.ink,
+          fontWeight: FontWeight.w700,
+        ),
+
+        bodyLarge: GoogleFonts.sora(color: AppColors.ink),
+
+        bodyMedium: GoogleFonts.sora(color: AppColors.inkSoft),
+
+        labelMedium: GoogleFonts.sora(color: AppColors.n300),
       ),
     );
   }
