@@ -135,6 +135,21 @@ class QuranifyTheme {
         foregroundColor: Colors.white,
       ),
 
+      dialogTheme: theme.dialogTheme.copyWith(
+        backgroundColor: AppColors.ink,
+        elevation: 0,
+        insetPadding: const EdgeInsets.all(10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        titleTextStyle: AppTextStyle.medium.copyWith(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+        contentTextStyle: AppTextStyle.regular.copyWith(
+          color: Colors.white70,
+          fontSize: 14,
+        ),
+      ),
+
       // Ripple
       splashColor: AppColors.secondary.withValues(alpha: 0.12),
 

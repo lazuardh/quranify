@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranify/lib.dart';
 import 'injection.dart' as di;
 
@@ -14,11 +15,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: QuranifyTheme().of(context),
-      home: SplashScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<LastReadCubit>()..loadLastRead(),
+        ),
+        BlocProvider(create: (_) => getIt<GetQuranCubit>()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: QuranifyTheme().of(context),
+        home: SplashScreen(),
+      ),
     );
   }
 }

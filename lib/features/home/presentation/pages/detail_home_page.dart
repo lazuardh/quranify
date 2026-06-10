@@ -12,17 +12,22 @@ class DetailHomePage extends StatefulWidget {
 
 class _DetailHomePageState extends State<DetailHomePage> {
   late final GetSurahCubit _cubit;
+  late final LastReadCubit _lastReadCubit;
 
   @override
   void initState() {
     _cubit = getIt<GetSurahCubit>();
     _cubit.getSurah(number: widget.params.number);
+
+    _lastReadCubit = getIt<LastReadCubit>();
+    _lastReadCubit.loadLastRead();
     super.initState();
   }
 
   @override
   void dispose() {
     _cubit.close();
+    _lastReadCubit.close();
     super.dispose();
   }
 
@@ -76,53 +81,83 @@ class _DetailHomePageWrapper extends StatelessWidget {
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-            child: Card(
-              child: ColumnPadding(
-                padding: EdgeInsetsGeometry.all(20),
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: theme.tertiary),
+            child: InkWell(
+              onTap: () {
+                context.confirmationDialog(
+                  message: 'Are you sure you want to bookmark this verse?',
+                  onPressed: () async {
+                    Navigator.pop(context); // tutup dialog dulu
+
+                    context.read<LastReadCubit>().saveLastRead(
+                      LastReadEntity(
+                        surahNumber: _detailSurah.number!,
+                        surahName: _detailSurah.name,
+                        ayahNumber: _detailSurah.ayahs[index].numberInSurah,
+                      ),
+                    );
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Last read saved ${_detailSurah.name} ayah ${_detailSurah.ayahs[index].numberInSurah}",
+                          ),
                         ),
-                        child: Text('${_detailSurah.ayahs[index].number}'),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Icon(Icons.bookmark, size: 18),
-                      ),
-                    ],
-                  ),
-                  Align(
-                    alignment: AlignmentGeometry.centerRight,
-                    child: Text(
-                      _detailSurah.ayahs[index].arabicText,
-                      style: AppTextStyle.regular.copyWith(fontSize: 20),
+                      );
+                    }
+                  },
+                );
+              },
+              child: Card(
+                child: ColumnPadding(
+                  padding: EdgeInsetsGeometry.all(20),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: theme.tertiary),
+                          ),
+                          child: Text(
+                            '${_detailSurah.ayahs[index].numberInSurah}',
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Icon(Icons.bookmark, size: 18),
+                        ),
+                      ],
                     ),
-                  ),
-                  Divider(),
-                  Text(
-                    _detailSurah.ayahs[index].translationText,
-                    style: AppTextStyle.regular.copyWith(fontSize: 12),
-                  ),
-                ],
+                    Align(
+                      alignment: AlignmentGeometry.centerRight,
+                      child: Text(
+                        _detailSurah.ayahs[index].arabicText,
+                        style: AppTextStyle.regular.copyWith(fontSize: 20),
+                      ),
+                    ),
+                    Divider(),
+                    Text(
+                      _detailSurah.ayahs[index].translationText,
+                      style: AppTextStyle.regular.copyWith(fontSize: 12),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
         },
       ),
-      bottomNavigationBar: PlayQuranCard(
-        name: _detailSurah.name,
-        qori: "Mishary Rashid Alafasy",
-        progress: 0.55,
-        currentDuration: "0:42",
-        totalDuration: "1:24",
-      ),
+      // bottomNavigationBar: PlayQuranCard(
+      //   name: _detailSurah.name,
+      //   qori: "Mishary Rashid Alafasy",
+      //   progress: 0.55,
+      //   currentDuration: "0:42",
+      //   totalDuration: "1:24",
+      // ),
     );
   }
 }

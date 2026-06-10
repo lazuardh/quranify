@@ -43,6 +43,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   get_it: ^9.2.1
   infinite_scroll_pagination: ^5.1.1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:

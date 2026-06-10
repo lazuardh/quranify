@@ -11,17 +11,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final GetQuranCubit _cubit;
+  late final LastReadCubit _lastReadCubit;
 
   @override
   void initState() {
     _cubit = getIt<GetQuranCubit>();
+    _lastReadCubit = getIt<LastReadCubit>();
     _cubit.getQuran();
+    _lastReadCubit.loadLastRead();
     super.initState();
   }
 
   @override
   void dispose() {
     _cubit.close();
+    _lastReadCubit.close();
     super.dispose();
   }
 

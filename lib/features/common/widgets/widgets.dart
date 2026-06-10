@@ -4,3 +4,5 @@ export 'custom_schroll.dart';
 export 'custom_wrapper.dart';
 export 'gap.dart';
 export 'custom_app_bar.dart';
+export 'custom_dialog.dart';
+export 'custom_button.dart';

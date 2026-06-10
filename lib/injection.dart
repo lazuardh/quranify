@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:quranify/lib.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
@@ -8,10 +9,14 @@ Future<void> init() async {
   await _core();
   _quran();
   _surah();
+  _lastRead();
 }
 
 Future<void> _core() async {
   getIt.registerLazySingleton<http.Client>(() => http.Client());
+  final sharedPreferences = await SharedPreferences.getInstance();
+
+  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
 }
 
 void _quran() {
@@ -22,4 +27,12 @@ void _quran() {
 
 void _surah() {
   getIt.registerFactory(() => GetSurahCubit(getIt()));
+}
+
+void _lastRead() {
+  getIt.registerLazySingleton(() => LastReadLocalDataSource(getIt()));
+  getIt.registerLazySingleton<LastReadRepository>(
+    () => LastReadRepositoryImpl(getIt()),
+  );
+  getIt.registerFactory(() => LastReadCubit(getIt()));
 }

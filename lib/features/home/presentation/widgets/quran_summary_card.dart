@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quranify/features/features.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quranify/lib.dart';
 
 class QuranSummaryCard extends StatelessWidget {
   const QuranSummaryCard({super.key});
@@ -14,7 +15,7 @@ class QuranSummaryCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _cardSummary(summary: "LAST READ", surah: 'Al-Baqorah', ayah: 225),
+          _BlocSummery(),
           _KhatamProgressCard(summary: "KHATAM \nGOALS", progress: 42),
         ],
       ),
@@ -22,17 +23,40 @@ class QuranSummaryCard extends StatelessWidget {
   }
 }
 
+class _BlocSummery extends StatelessWidget {
+  const _BlocSummery();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LastReadCubit, LastReadState>(
+      builder: (context, state) {
+        if (state is LastReadLoading) {
+          return CircularProgressIndicator();
+        }
+
+        if (state is LastReadEmpty) {
+          return const Text('Belum ada Last Read');
+        }
+
+        if (state is LastReadLoaded) {
+          return _cardSummary(
+            surah: state.lastRead.surahName,
+            ayah: state.lastRead.ayahNumber,
+          );
+        }
+
+        return SizedBox();
+      },
+    );
+  }
+}
+
 // ignore: camel_case_types
 class _cardSummary extends StatelessWidget {
-  const _cardSummary({
-    required String summary,
-    required String surah,
-    required int? ayah,
-  }) : _summary = summary,
-       _surah = surah,
-       _ayah = ayah;
+  const _cardSummary({required String surah, required int? ayah})
+    : _surah = surah,
+      _ayah = ayah;
 
-  final String _summary;
   final String _surah;
   final int? _ayah;
 
@@ -57,7 +81,7 @@ class _cardSummary extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _summary,
+                    'LAST READ',
                     style: AppTextStyle.regular.copyWith(fontSize: 18),
                   ),
                   Text(
