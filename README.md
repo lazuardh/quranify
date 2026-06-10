@@ -1,17 +1,87 @@
-# quranify
+# 📖 Quranify
 
-A new Flutter project.
+Quranify adalah aplikasi Al-Qur'an modern berbasis Flutter yang menyediakan pengalaman membaca, mendengarkan, dan melacak progres tilawah dengan antarmuka yang sederhana dan nyaman.
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+* 📚 Daftar 114 Surah
+* 📖 Detail Surah dan Ayat
+* 🌍 Terjemahan Bahasa Indonesia
+* 🔊 Audio Tilawah
+* 🔖 Last Read Bookmark
+* 🎯 Khatam Progress Tracking
+* 🌙 Dark Mode Ready
 
-A few resources to get you started if this is your first Flutter project:
+## 📸 Screenshots
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+| Home                        | Detail Surah                  |
+| --------------------------- | ----------------------------- |
+| ![](assets/readme/home.png) | ![](assets/readme/detail.png) |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Audio Player                  |
+| ----------------------------- |
+| ![](assets/readme/player.png) |
+
+## 🎥 Demo
+
+[Watch Demo Video](https://youtube.com/your-demo-link)
+
+Atau gunakan GIF:
+
+![](assets/readme/demo.gif)
+
+## 🏗️ Architecture
+
+Clean Architecture
+
+```text
+lib/
+├── core/
+├── data/
+├── domain/
+├── presentation/
+├── dependency_injection/
+└── main.dart
+```
+
+## 🛠️ Tech Stack
+
+* Flutter
+* Dart
+* BLoC / Cubit
+* HTTP
+* SQLite
+* SharedPreferences
+* Firebase FCM
+* GetIt
+* Google Fonts
+
+## 🚀 Getting Started
+
+Clone project
+
+```bash
+git clone https://github.com/username/quranify.git
+```
+
+Install dependency
+
+```bash
+flutter pub get
+```
+
+Run project
+
+```bash
+flutter run
+```
+
+## 📱 APK
+
+Download APK:
+
+https://your-apk-link.com
+
+## 👨‍💻 Author
+
+Habiyan Lazuard
