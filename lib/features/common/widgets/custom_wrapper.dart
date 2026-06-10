@@ -1,33 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Custom Widget for make a `Container` with `Padding` inside a `Sliver Widget`
-class SliverBoxPadding extends StatelessWidget {
-  const SliverBoxPadding({
-    Key? key,
-    EdgeInsetsGeometry padding = EdgeInsets.zero,
-    required Widget child,
-    Color background = Colors.transparent,
-  }) : _padding = padding,
-       _child = child,
-       _background = background,
-       super(key: key);
-
-  final EdgeInsetsGeometry _padding;
-  final Widget _child;
-  final Color _background;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(padding: _padding, color: _background, child: _child),
-    );
-  }
-}
-
 /// Custom Widget for make a `Column` with `Padding` inside a `non-Sliver widget`
 class ColumnPadding extends StatelessWidget {
   const ColumnPadding({
-    Key? key,
+    super.key,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
     required List<Widget> children,
     MainAxisSize mainAxisSize = MainAxisSize.max,
@@ -39,8 +15,7 @@ class ColumnPadding extends StatelessWidget {
        _background = background,
        _mainAxisSize = mainAxisSize,
        _mainAxisAlignment = mainAxisAlignment,
-       _crossAxisAlignment = crossAxisAlignment,
-       super(key: key);
+       _crossAxisAlignment = crossAxisAlignment;
 
   final EdgeInsetsGeometry _padding;
   final List<Widget> _children;
@@ -67,7 +42,7 @@ class ColumnPadding extends StatelessWidget {
 /// Custom Widget for make a `Row` with `Padding` inside a `non-Sliver Widget`
 class RowPadding extends StatelessWidget {
   const RowPadding({
-    Key? key,
+    super.key,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
     required List<Widget> children,
     Color background = Colors.transparent,
@@ -77,8 +52,7 @@ class RowPadding extends StatelessWidget {
        _children = children,
        _background = background,
        _mainAxisAlignment = mainAxisAlignment,
-       _crossAxisAlignment = crossAxisAlignment,
-       super(key: key);
+       _crossAxisAlignment = crossAxisAlignment;
 
   final EdgeInsetsGeometry _padding;
   final List<Widget> _children;
@@ -95,90 +69,6 @@ class RowPadding extends StatelessWidget {
         mainAxisAlignment: _mainAxisAlignment,
         crossAxisAlignment: _crossAxisAlignment,
         children: _children,
-      ),
-    );
-  }
-}
-
-/// Custom Widget for make a `Column` with `Padding` inside a `Sliver Widget`
-class SliverColumnPadding extends StatelessWidget {
-  const SliverColumnPadding({
-    Key? key,
-    EdgeInsetsGeometry padding = EdgeInsets.zero,
-    required List<Widget> children,
-    MainAxisSize mainAxisSize = MainAxisSize.max,
-    Color background = Colors.transparent,
-    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
-  }) : _padding = padding,
-       _children = children,
-       _background = background,
-       _mainAxisSize = mainAxisSize,
-       _mainAxisAlignment = mainAxisAlignment,
-       _crossAxisAlignment = crossAxisAlignment,
-       super(key: key);
-
-  final EdgeInsetsGeometry _padding;
-  final List<Widget> _children;
-  final Color _background;
-  final MainAxisSize _mainAxisSize;
-  final MainAxisAlignment _mainAxisAlignment;
-  final CrossAxisAlignment _crossAxisAlignment;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        color: _background,
-        padding: _padding,
-        child: Column(
-          mainAxisSize: _mainAxisSize,
-          mainAxisAlignment: _mainAxisAlignment,
-          crossAxisAlignment: _crossAxisAlignment,
-          children: _children,
-        ),
-      ),
-    );
-  }
-}
-
-/// Custom Widget for make a `Row` with `Padding` inside a `Sliver Widget`
-class SliverRowPadding extends StatelessWidget {
-  const SliverRowPadding({
-    Key? key,
-    EdgeInsetsGeometry padding = EdgeInsets.zero,
-    required List<Widget> children,
-    MainAxisSize mainAxisSize = MainAxisSize.max,
-    Color background = Colors.transparent,
-    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
-  }) : _padding = padding,
-       _children = children,
-       _background = background,
-       _mainAxisSize = mainAxisSize,
-       _mainAxisAlignment = mainAxisAlignment,
-       _crossAxisAlignment = crossAxisAlignment,
-       super(key: key);
-
-  final EdgeInsetsGeometry _padding;
-  final List<Widget> _children;
-  final Color _background;
-  final MainAxisSize _mainAxisSize;
-  final MainAxisAlignment _mainAxisAlignment;
-  final CrossAxisAlignment _crossAxisAlignment;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        color: _background,
-        padding: _padding,
-        child: Row(
-          mainAxisSize: _mainAxisSize,
-          mainAxisAlignment: _mainAxisAlignment,
-          crossAxisAlignment: _crossAxisAlignment,
-          children: _children,
-        ),
       ),
     );
   }
