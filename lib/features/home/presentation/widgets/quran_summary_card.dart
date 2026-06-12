@@ -35,7 +35,7 @@ class _BlocSummery extends StatelessWidget {
         }
 
         if (state is LastReadEmpty) {
-          return const Text('Belum ada Last Read');
+          return const _cardSummary(isLastRead: true);
         }
 
         if (state is LastReadLoaded) {
@@ -53,12 +53,14 @@ class _BlocSummery extends StatelessWidget {
 
 // ignore: camel_case_types
 class _cardSummary extends StatelessWidget {
-  const _cardSummary({required String surah, required int? ayah})
+  const _cardSummary({String? surah, int? ayah, bool isLastRead = false})
     : _surah = surah,
-      _ayah = ayah;
+      _ayah = ayah,
+      _isLastRead = isLastRead;
 
-  final String _surah;
+  final String? _surah;
   final int? _ayah;
+  final bool _isLastRead;
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +87,17 @@ class _cardSummary extends StatelessWidget {
                     style: AppTextStyle.regular.copyWith(fontSize: 18),
                   ),
                   Text(
-                    _surah,
+                    _isLastRead == true ? "No \nHistory" : _surah ?? '',
                     style: AppTextStyle.semiBold.copyWith(
                       fontSize: 28,
                       color: theme.tertiary,
                     ),
                   ),
                   Text(
-                    "Ayah $_ayah",
-                    style: AppTextStyle.regular.copyWith(fontSize: 20),
+                    _isLastRead == true ? "Start Reading" : "Ayah $_ayah",
+                    style: AppTextStyle.regular.copyWith(
+                      fontSize: _isLastRead == true ? 16 : 20,
+                    ),
                   ),
                 ],
               ),
