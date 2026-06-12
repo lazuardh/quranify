@@ -16,7 +16,7 @@ Quranify adalah aplikasi Al-Qur'an modern berbasis Flutter yang menyediakan peng
 
 | Home                        | Detail Surah                  |
 | --------------------------- | ----------------------------- |
-| ![](assets/readme/home.png) | ![](assets/readme/detail.png) |
+| ![](assets/screenshoot/home_sc.png) | ![](assets/screenshoot/detail_sc.png) |
 
 | Audio Player                  |
 | ----------------------------- |
