@@ -134,7 +134,7 @@ class _LastReadCard extends StatelessWidget {
                   Text(
                     _isEmpty ? "Start Reading" : "Ayah $_ayah",
                     style: AppTextStyle.regular.copyWith(
-                      fontSize: _isEmpty == true ? 16 : 20,
+                      fontSize: _isEmpty ? 16 : 20,
                     ),
                   ),
                 ],
