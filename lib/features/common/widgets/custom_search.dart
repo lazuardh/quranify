@@ -26,7 +26,9 @@ class CustomSearch extends StatelessWidget {
 }
 
 class CustomSearchWithoutSuffixIcon extends StatelessWidget {
-  const CustomSearchWithoutSuffixIcon({super.key});
+  const CustomSearchWithoutSuffixIcon({super.key, required this.onChanged});
+
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class CustomSearchWithoutSuffixIcon extends StatelessWidget {
             hint: Text(TextConstant.search, softWrap: true),
             prefixIcon: Icon(Icons.search),
           ),
+          onChanged: onChanged,
         ),
       ),
     );

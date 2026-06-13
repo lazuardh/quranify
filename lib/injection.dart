@@ -10,6 +10,7 @@ Future<void> init() async {
   _quran();
   _surah();
   _lastRead();
+  _artists();
 }
 
 Future<void> _core() async {
@@ -35,4 +36,10 @@ void _lastRead() {
     () => LastReadRepositoryImpl(getIt()),
   );
   getIt.registerFactory(() => LastReadCubit(getIt()));
+}
+
+void _artists() {
+  getIt.registerLazySingleton(() => ArtistRemoteDataSource(getIt()));
+  getIt.registerLazySingleton(() => ArtistRepository(getIt()));
+  getIt.registerFactory(() => GetArtistsCubit(getIt()));
 }

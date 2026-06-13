@@ -13,6 +13,7 @@ class DetailHomePage extends StatefulWidget {
 class _DetailHomePageState extends State<DetailHomePage> {
   late final GetSurahCubit _cubit;
   late final LastReadCubit _lastReadCubit;
+  late final GetArtistsCubit _getArtistsCubit;
 
   @override
   void initState() {
@@ -21,6 +22,9 @@ class _DetailHomePageState extends State<DetailHomePage> {
 
     _lastReadCubit = getIt<LastReadCubit>();
     _lastReadCubit.loadLastRead();
+
+    _getArtistsCubit = getIt<GetArtistsCubit>();
+    _getArtistsCubit.getArtists();
     super.initState();
   }
 
@@ -28,13 +32,17 @@ class _DetailHomePageState extends State<DetailHomePage> {
   void dispose() {
     _cubit.close();
     _lastReadCubit.close();
+    _getArtistsCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _cubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _cubit),
+        BlocProvider.value(value: _getArtistsCubit),
+      ],
       child: BlocConsumer<GetSurahCubit, GetSurahState>(
         builder: (context, state) {
           if (state is GetSurahLoaded) {
@@ -94,7 +102,7 @@ class _DetailHomePageWrapper extends StatelessWidget {
           );
         },
       ),
-      bottomSheet: SelectedQori(),
+      bottomSheet: SelectedArtists(),
       // bottomNavigationBar: PlayQuranCard(
       //   name: _detailSurah.name,
       //   qori: "Mishary Rashid Alafasy",
@@ -136,77 +144,118 @@ class _DetailHomePageWrapper extends StatelessWidget {
   }
 }
 
-class SelectedQori extends StatelessWidget {
-  const SelectedQori({super.key});
+class SelectedArtists extends StatelessWidget {
+  const SelectedArtists({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      height: MediaQuery.sizeOf(context).height * 0.7,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        color: theme.primary.withValues(alpha: .88),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 25,
-            spreadRadius: 0,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Divider(
-            indent: 160,
-            endIndent: 160,
-            thickness: 8,
-            radius: BorderRadius.circular(10),
-          ),
-          Gap(height: 20),
-          const CustomSearchWithoutSuffixIcon(),
-          Gap(height: 10),
-          Card(
-            child: ListTile(
-              leading: CircleAvatar(
-                maxRadius: 25,
-                child: Icon(Icons.mic, size: 20),
+    return BlocBuilder<GetArtistsCubit, GetArtistsState>(
+      builder: (context, state) {
+        if (state is GetArtistsError) {
+          return Text(state.message as String);
+        }
+
+        if (state is GetArtistsLoaded) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            height: MediaQuery.sizeOf(context).height * 0.7,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
-              contentPadding: EdgeInsets.all(10),
-              title: Text(
-                'Mishary al-rashid',
-                style: AppTextStyle.medium.copyWith(fontSize: 14),
-              ),
-              subtitle: Text(
-                'Mishary al-rashid',
-                style: AppTextStyle.medium.copyWith(fontSize: 12),
-              ),
-              trailing: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.sizeOf(context).width * 0.3,
+              color: theme.primary.withValues(alpha: .88),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 25,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 10),
                 ),
-                child: Row(
-                  children: [
-                    Text(
-                      'Now Playing',
-                      style: AppTextStyle.medium.copyWith(
-                        color: theme.secondary,
-                        fontSize: 10,
-                      ),
-                    ),
-                    Gap(width: 10),
-                    Icon(Icons.play_arrow_rounded, color: theme.secondary),
-                  ],
-                ),
-              ),
+              ],
             ),
+            child: Column(
+              children: [
+                Divider(
+                  indent: 160,
+                  endIndent: 160,
+                  thickness: 8,
+                  radius: BorderRadius.circular(10),
+                ),
+                const Gap(height: 20),
+                CustomSearchWithoutSuffixIcon(
+                  onChanged: (value) {
+                    context.read<GetArtistsCubit>().searchArtists(value);
+                  },
+                ),
+                const Gap(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: state.filtered?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return _ArtistCard(
+                        title: state.filtered?[index].name ?? 'No Artist found',
+                        subtitle: state.filtered?[index].englishName ?? '',
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return SizedBox.shrink();
+      },
+    );
+  }
+}
+
+class _ArtistCard extends StatelessWidget {
+  const _ArtistCard({
+    required String title,
+    required String subtitle,
+    void Function()? onTap,
+  }) : _title = title,
+       _subtitle = subtitle,
+       _onTap = onTap;
+
+  final String _title;
+  final String _subtitle;
+  final void Function()? _onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(maxRadius: 25, child: Icon(Icons.mic, size: 20)),
+        contentPadding: EdgeInsets.all(10),
+        title: Text(_title, style: AppTextStyle.medium.copyWith(fontSize: 14)),
+        subtitle: Text(
+          _subtitle,
+          style: AppTextStyle.medium.copyWith(fontSize: 12),
+        ),
+        trailing: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.sizeOf(context).width * 0.3,
           ),
-        ],
+          child: Row(
+            children: [
+              Text(
+                'Now Playing',
+                style: AppTextStyle.medium.copyWith(
+                  color: theme.secondary,
+                  fontSize: 10,
+                ),
+              ),
+              const Gap(width: 10),
+              Icon(Icons.play_arrow_rounded, color: theme.secondary),
+            ],
+          ),
+        ),
+        onTap: _onTap,
       ),
     );
   }
