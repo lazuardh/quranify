@@ -77,7 +77,7 @@ class _HomeScreenWrapper extends StatelessWidget {
         children: [
           const CustomSearch(),
           const CustomSchrollWrapper(),
-          const QuranSummaryCard(),
+          QuranSummaryCard(qurans: _listQuran),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Text(
