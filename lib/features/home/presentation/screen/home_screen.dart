@@ -11,21 +11,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final GetQuranCubit _cubit;
-  late final LastReadCubit _lastReadCubit;
 
   @override
   void initState() {
     _cubit = getIt<GetQuranCubit>();
-    _lastReadCubit = getIt<LastReadCubit>();
+
+    context.read<LastReadCubit>().loadLastRead();
     _cubit.getQuran();
-    _lastReadCubit.loadLastRead();
     super.initState();
   }
 
   @override
   void dispose() {
     _cubit.close();
-    _lastReadCubit.close();
     super.dispose();
   }
 
@@ -78,15 +76,19 @@ class _HomeScreenWrapper extends StatelessWidget {
           const CustomSearch(),
           const CustomSchrollWrapper(),
           QuranSummaryCard(qurans: _listQuran),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Text(
-              'Surah List',
-              style: AppTextStyle.bold.copyWith(fontSize: 18),
-            ),
-          ),
+          _titleContent(),
           Expanded(child: CardItemListQuran(listQuran: _listQuran)),
         ],
+      ),
+    );
+  }
+
+  Widget _titleContent() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      child: Text(
+        'Surah List',
+        style: AppTextStyle.bold.copyWith(fontSize: 18),
       ),
     );
   }

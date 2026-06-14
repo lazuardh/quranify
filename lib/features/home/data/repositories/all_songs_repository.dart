@@ -33,4 +33,19 @@ class AllSongsRepository with BaseRepository {
       );
     });
   }
+
+  Future<Either<Failure, BaseApiResponseEntity<AudioSurahEntity>>>
+  getAudioSurahApi({required int number, required String artist}) {
+    return catchOrThrow(() async {
+      final response = await _remoteDataSource.fetchAudioSurah(
+        number: number,
+        artist: artist,
+      );
+
+      return BaseApiResponseEntity.fromBaseApiResponseModel(
+        response,
+        data: response.data?.toEntity(),
+      );
+    });
+  }
 }

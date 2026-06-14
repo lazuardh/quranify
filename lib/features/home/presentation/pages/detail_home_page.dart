@@ -12,37 +12,31 @@ class DetailHomePage extends StatefulWidget {
 
 class _DetailHomePageState extends State<DetailHomePage> {
   late final GetSurahCubit _cubit;
-  late final LastReadCubit _lastReadCubit;
-  late final GetArtistsCubit _getArtistsCubit;
+
+  // late final GetDataCubit _getDataCubit;
 
   @override
   void initState() {
     _cubit = getIt<GetSurahCubit>();
     _cubit.getSurah(number: widget.params.number);
 
-    _lastReadCubit = getIt<LastReadCubit>();
-    _lastReadCubit.loadLastRead();
+    context.read<GetDataCubit>()
+      ..setNumberSurah(numberSurah: widget.params.number)
+      ..load();
 
-    _getArtistsCubit = getIt<GetArtistsCubit>();
-    _getArtistsCubit.getArtists();
     super.initState();
   }
 
   @override
   void dispose() {
     _cubit.close();
-    _lastReadCubit.close();
-    _getArtistsCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider.value(value: _cubit),
-        BlocProvider.value(value: _getArtistsCubit),
-      ],
+    return BlocProvider.value(
+      value: _cubit,
       child: BlocConsumer<GetSurahCubit, GetSurahState>(
         builder: (context, state) {
           if (state is GetSurahLoaded) {
@@ -79,37 +73,39 @@ class _DetailHomePageWrapper extends StatelessWidget {
         name: _detailSurah.name,
         numberOfAyah: _detailSurah.numberOfAyat,
         relevationType: _detailSurah.relevationType,
-        playQuran: () {},
       ),
       body: ListView.builder(
-        itemCount: _detailSurah.ayahs.length,
+        itemCount: _detailSurah.ayahs.length + 1,
         shrinkWrap: true,
         physics: const ClampingScrollPhysics(),
         itemBuilder: (context, index) {
-          return ItemCardSurah(
-            onTap: () {
-              _savedCurrentData(
-                context,
-                ayahNumber: _detailSurah.ayahs[index].numberInSurah,
-                numberSurah: _detailSurah.number,
-                surahName: _detailSurah.name,
-              );
-            },
-            arabicText: _detailSurah.ayahs[index].arabicText,
-            numberInSurah: _detailSurah.ayahs[index].numberInSurah,
-            surahNumber: _detailSurah.number ?? 0,
-            translationText: _detailSurah.ayahs[index].translationText,
+          if (index == 0) {
+            return PlayQuran(params: PlayQuranParams(name: _detailSurah.name));
+          }
+
+          final ayah = _detailSurah.ayahs[index - 1];
+
+          return Column(
+            children: [
+              ItemCardSurah(
+                onTap: () {
+                  _savedCurrentData(
+                    context,
+                    ayahNumber: ayah.numberInSurah,
+                    numberSurah: ayah.number,
+                    surahName: _detailSurah.name,
+                  );
+                },
+                arabicText: ayah.arabicText,
+                numberInSurah: ayah.numberInSurah,
+                surahNumber: _detailSurah.number ?? 0,
+                translationText: ayah.translationText,
+              ),
+            ],
           );
         },
       ),
-      bottomSheet: SelectedArtists(),
-      // bottomNavigationBar: PlayQuranCard(
-      //   name: _detailSurah.name,
-      //   qori: "Mishary Rashid Alafasy",
-      //   progress: 0.55,
-      //   currentDuration: "0:42",
-      //   totalDuration: "1:24",
-      // ),
+      // bottomSheet: SelectedArtists(numberSurah: _detailSurah.number!),
     );
   }
 
@@ -140,123 +136,6 @@ class _DetailHomePageWrapper extends StatelessWidget {
           );
         }
       },
-    );
-  }
-}
-
-class SelectedArtists extends StatelessWidget {
-  const SelectedArtists({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    return BlocBuilder<GetArtistsCubit, GetArtistsState>(
-      builder: (context, state) {
-        if (state is GetArtistsError) {
-          return Text(state.message as String);
-        }
-
-        if (state is GetArtistsLoaded) {
-          return Container(
-            padding: const EdgeInsets.all(16),
-            height: MediaQuery.sizeOf(context).height * 0.7,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-              color: theme.primary.withValues(alpha: .88),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 25,
-                  spreadRadius: 0,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Divider(
-                  indent: 160,
-                  endIndent: 160,
-                  thickness: 8,
-                  radius: BorderRadius.circular(10),
-                ),
-                const Gap(height: 20),
-                CustomSearchWithoutSuffixIcon(
-                  onChanged: (value) {
-                    context.read<GetArtistsCubit>().searchArtists(value);
-                  },
-                ),
-                const Gap(height: 10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: state.filtered?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      return _ArtistCard(
-                        title: state.filtered?[index].name ?? 'No Artist found',
-                        subtitle: state.filtered?[index].englishName ?? '',
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return SizedBox.shrink();
-      },
-    );
-  }
-}
-
-class _ArtistCard extends StatelessWidget {
-  const _ArtistCard({
-    required String title,
-    required String subtitle,
-    void Function()? onTap,
-  }) : _title = title,
-       _subtitle = subtitle,
-       _onTap = onTap;
-
-  final String _title;
-  final String _subtitle;
-  final void Function()? _onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    return Card(
-      child: ListTile(
-        leading: CircleAvatar(maxRadius: 25, child: Icon(Icons.mic, size: 20)),
-        contentPadding: EdgeInsets.all(10),
-        title: Text(_title, style: AppTextStyle.medium.copyWith(fontSize: 14)),
-        subtitle: Text(
-          _subtitle,
-          style: AppTextStyle.medium.copyWith(fontSize: 12),
-        ),
-        trailing: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.sizeOf(context).width * 0.3,
-          ),
-          child: Row(
-            children: [
-              Text(
-                'Now Playing',
-                style: AppTextStyle.medium.copyWith(
-                  color: theme.secondary,
-                  fontSize: 10,
-                ),
-              ),
-              const Gap(width: 10),
-              Icon(Icons.play_arrow_rounded, color: theme.secondary),
-            ],
-          ),
-        ),
-        onTap: _onTap,
-      ),
     );
   }
 }

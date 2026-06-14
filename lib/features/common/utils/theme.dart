@@ -155,6 +155,12 @@ class QuranifyTheme {
 
       highlightColor: Colors.transparent,
 
+      bottomNavigationBarTheme: theme.bottomNavigationBarTheme.copyWith(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        type: BottomNavigationBarType.shifting,
+      ),
+
       // Typography
       textTheme: GoogleFonts.soraTextTheme(theme.textTheme).copyWith(
         headlineLarge: GoogleFonts.sora(

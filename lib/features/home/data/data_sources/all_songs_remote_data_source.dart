@@ -39,4 +39,23 @@ class AllSongsRemoteDataSource with BaseDataResource {
       );
     });
   }
+
+  Future<BaseApiResponseModel<AudioSurahModel>> fetchAudioSurah({
+    required int number,
+    required String artist,
+  }) async {
+    return httpCatchOrThrow(() async {
+      final response = await client.get(
+        Uri.parse('${UrlConstant.surah}/$number/$artist'),
+      );
+
+      final json = jsonDecode(response.body);
+
+      return BaseApiResponseModel.fromJson(
+        json,
+        generateData: (response) =>
+            AudioSurahModel.fromJson(response as Map<String, Object?>),
+      );
+    });
+  }
 }

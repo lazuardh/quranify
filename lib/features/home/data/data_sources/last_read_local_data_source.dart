@@ -4,7 +4,7 @@ import 'package:quranify/lib.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LastReadLocalDataSource {
-  final SharedPreferences prefs;
+  final SharedPreferencesWithCache prefs;
 
   const LastReadLocalDataSource(this.prefs);
 

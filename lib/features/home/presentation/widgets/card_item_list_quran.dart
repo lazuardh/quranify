@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranify/features/home/presentation/pages/detail_home_page.dart';
 
 import '../../../../lib.dart';
@@ -15,7 +16,7 @@ class CardItemListQuran extends StatelessWidget {
       itemCount: _listQuran.length,
       padding: EdgeInsets.symmetric(horizontal: 10),
       physics: const ClampingScrollPhysics(),
-      prototypeItem: _item(
+      prototypeItem: _ItemQuran(
         name: 'Al-fatihah',
         relevationType: 'meccah',
         numberOfAyah: 7,
@@ -24,16 +25,19 @@ class CardItemListQuran extends StatelessWidget {
       itemBuilder: (context, index) {
         return RepaintBoundary(
           child: Card(
-            child: _item(
+            child: _ItemQuran(
               name: _listQuran[index].name,
               relevationType: _listQuran[index].relevationType,
               numberOfAyah: _listQuran[index].numberOfAyat,
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailHomePage(
-                    params: DetailHomeScreenParams(
-                      number: _listQuran[index].number,
+                  builder: (context) => BlocProvider.value(
+                    value: context.read<LastReadCubit>(),
+                    child: DetailHomePage(
+                      params: DetailHomeScreenParams(
+                        number: _listQuran[index].number,
+                      ),
                     ),
                   ),
                 ),
@@ -46,9 +50,8 @@ class CardItemListQuran extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable, camel_case_types
-class _item extends StatelessWidget {
-  const _item({
+class _ItemQuran extends StatelessWidget {
+  const _ItemQuran({
     required String name,
     required String relevationType,
     int? numberOfAyah,

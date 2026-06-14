@@ -1,5 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranify/lib.dart';
+
+class PlayQuran extends StatefulWidget {
+  const PlayQuran({super.key, required PlayQuranParams params})
+    : _params = params;
+
+  final PlayQuranParams _params;
+
+  @override
+  State<PlayQuran> createState() => _PlayQuranState();
+}
+
+class _PlayQuranState extends State<PlayQuran> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<GetAudioCubit, GetAudioState>(
+      listener: (context, state) {
+        if (state is GetAudioLoaded) {
+          final urls = state.audios?.ayahs
+              .map((e) => e.audio)
+              .whereType<String>()
+              .toList();
+
+          if (urls == null || urls.isEmpty) {
+            return context.attentionDialog(
+              message: 'Audio Tidak Tersedia',
+              onPressed: () => Navigator.pop(context),
+            );
+          }
+
+          final surah = context.read<GetDataCubit>().state.numberSurah;
+
+          context.read<AudioPlayerCubit>().play(urls: urls, surahNumber: surah);
+        }
+      },
+      child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+        builder: (context, state) {
+          return PlayQuranCard(
+            name: widget._params.name,
+            qori: context.select<GetDataCubit, String>(
+              (cubit) => cubit.state.name,
+            ),
+            ayat: state is AudioPlayerPlaying || state is AudioPlayerPaused
+                ? '${state.currentAyah}/${state.totalAyah}'
+                : '',
+            progress: state.progress,
+            currentDuration: state.position.format(),
+            totalDuration: state.duration.format(),
+            playButton: () {
+              final playerState = context.read<AudioPlayerCubit>().state;
+
+              final currentSurah = context
+                  .read<GetDataCubit>()
+                  .state
+                  .numberSurah;
+
+              if (playerState is AudioPlayerPlaying) {
+                if (playerState.surahNumber == currentSurah) {
+                  context.read<AudioPlayerCubit>().pause();
+                  return;
+                }
+              }
+
+              if (playerState is AudioPlayerPaused) {
+                if (playerState.surahNumber == currentSurah) {
+                  context.read<AudioPlayerCubit>().resume();
+                  return;
+                }
+              }
+
+              final state = context.read<GetDataCubit>().state;
+
+              context.read<GetAudioCubit>().getAudio(
+                number: state.numberSurah,
+                artist: state.identifier,
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
 
 class PlayQuranCard extends StatelessWidget {
   const PlayQuranCard({
@@ -9,13 +102,18 @@ class PlayQuranCard extends StatelessWidget {
     required this.progress,
     required this.currentDuration,
     required this.totalDuration,
-  });
+    void Function()? playButton,
+    required String ayat,
+  }) : _playButton = playButton,
+       _ayat = ayat;
 
   final String name;
   final String qori;
   final double progress;
   final String currentDuration;
   final String totalDuration;
+  final void Function()? _playButton;
+  final String _ayat;
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +122,15 @@ class PlayQuranCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       margin: EdgeInsets.only(
+        top: 10,
         left: 20,
         right: 20,
-        bottom: MediaQuery.viewPaddingOf(context).bottom + 10,
+        bottom: MediaQuery.viewPaddingOf(context).bottom + 2,
       ),
       height: MediaQuery.sizeOf(context).height * 0.2,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: colorScheme.surface.withValues(alpha: .8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 25,
-            spreadRadius: 0,
-            offset: const Offset(0, 10),
-          ),
-        ],
       ),
       child: Column(
         children: [
@@ -72,15 +163,12 @@ class PlayQuranCard extends StatelessWidget {
                 ),
               ),
 
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.open_in_full, size: 18),
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 8),
+                child: const Icon(Icons.menu_book_rounded, size: 18),
               ),
 
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.repeat, size: 18),
-              ),
+              Text(_ayat, style: AppTextStyle.medium.copyWith(fontSize: 12)),
             ],
           ),
 
@@ -126,11 +214,19 @@ class PlayQuranCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: colorScheme.secondary,
                 ),
-                child: IconButton(
-                  iconSize: 22,
-                  color: Colors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.play_arrow_rounded),
+                child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+                  builder: (context, state) {
+                    return IconButton(
+                      iconSize: 22,
+                      color: Colors.white,
+                      onPressed: _playButton,
+                      icon: Icon(
+                        state is AudioPlayerPlaying
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                      ),
+                    );
+                  },
                 ),
               ),
 

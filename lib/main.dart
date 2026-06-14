@@ -17,10 +17,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => getIt<LastReadCubit>()..loadLastRead(),
-        ),
+        BlocProvider(create: (_) => getIt<LastReadCubit>()),
         BlocProvider(create: (_) => getIt<GetQuranCubit>()),
+        BlocProvider(create: (context) => getIt<GetDataCubit>()),
+        BlocProvider(create: (context) => getIt<GetAudioCubit>()),
+        BlocProvider(create: (context) => getIt<AudioPlayerCubit>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

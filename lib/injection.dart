@@ -11,13 +11,21 @@ Future<void> init() async {
   _surah();
   _lastRead();
   _artists();
+  _audio();
+  _getData();
 }
 
 Future<void> _core() async {
   getIt.registerLazySingleton<http.Client>(() => http.Client());
-  final sharedPreferences = await SharedPreferences.getInstance();
+  final sharedPreferences = await SharedPreferencesWithCache.create(
+    cacheOptions: SharedPreferencesWithCacheOptions(
+      allowList: <String>{'identifier', 'number', 'last_read', 'name'},
+    ),
+  );
 
-  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+  getIt.registerLazySingleton<SharedPreferencesWithCache>(
+    () => sharedPreferences,
+  );
 }
 
 void _quran() {
@@ -42,4 +50,13 @@ void _artists() {
   getIt.registerLazySingleton(() => ArtistRemoteDataSource(getIt()));
   getIt.registerLazySingleton(() => ArtistRepository(getIt()));
   getIt.registerFactory(() => GetArtistsCubit(getIt()));
+}
+
+void _audio() {
+  getIt.registerFactory(() => GetAudioCubit(getIt()));
+  getIt.registerFactory(() => AudioPlayerCubit());
+}
+
+void _getData() {
+  getIt.registerFactory(() => GetDataCubit(prefs: getIt(), artists: getIt()));
 }

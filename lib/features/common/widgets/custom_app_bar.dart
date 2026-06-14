@@ -8,16 +8,16 @@ class CustomAppBarSurah extends StatelessWidget implements PreferredSizeWidget {
     required String name,
     int? numberOfAyah,
     required String relevationType,
-    void Function()? playQuran,
+    Widget? bottom,
   }) : _name = name,
        _numberOfAyah = numberOfAyah,
        _relevationType = relevationType,
-       _playQuran = playQuran;
+       _bottom = bottom;
 
   final String _name;
   final int? _numberOfAyah;
   final String _relevationType;
-  final void Function()? _playQuran;
+  final Widget? _bottom;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +39,20 @@ class CustomAppBarSurah extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: _playQuran,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SettingsPage()),
+          ),
           icon: Padding(
             padding: EdgeInsetsGeometry.only(right: 20),
-            child: Icon(Icons.play_circle_fill_outlined, size: 30),
+            child: Icon(Icons.settings, size: 20),
           ),
         ),
       ],
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(120),
+        child: _bottom ?? SizedBox.shrink(),
+      ),
     );
   }
 
