@@ -41,8 +41,13 @@ class _PlayQuranState extends State<PlayQuran> {
           }
 
           final surah = context.read<GetDataCubit>().state.numberSurah;
+          final artist = context.read<GetDataCubit>().state.identifier;
 
-          context.read<AudioPlayerCubit>().play(urls: urls, surahNumber: surah);
+          context.read<AudioPlayerCubit>().play(
+            urls: urls,
+            surahNumber: surah,
+            artistIdentifier: artist,
+          );
         }
       },
       child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
@@ -59,33 +64,39 @@ class _PlayQuranState extends State<PlayQuran> {
             currentDuration: state.position.format(),
             totalDuration: state.duration.format(),
             playButton: () {
-              final playerState = context.read<AudioPlayerCubit>().state;
+              final audioCubit = context.read<AudioPlayerCubit>();
+              final playerState = audioCubit.state;
 
-              final currentSurah = context
-                  .read<GetDataCubit>()
-                  .state
-                  .numberSurah;
+              final dataState = context.read<GetDataCubit>().state;
 
-              if (playerState is AudioPlayerPlaying) {
-                if (playerState.surahNumber == currentSurah) {
-                  context.read<AudioPlayerCubit>().pause();
-                  return;
-                }
+              final currentSurah = dataState.numberSurah;
+              final currentArtist = dataState.identifier;
+
+              final sameSurah = audioCubit.currentSurah == currentSurah;
+
+              final sameArtist = audioCubit.currentArtist == currentArtist;
+
+              /// pause
+              if (playerState is AudioPlayerPlaying &&
+                  sameSurah &&
+                  sameArtist) {
+                audioCubit.pause();
+                return;
               }
 
-              if (playerState is AudioPlayerPaused) {
-                if (playerState.surahNumber == currentSurah) {
-                  context.read<AudioPlayerCubit>().resume();
-                  return;
-                }
+              /// resume
+              if (playerState is AudioPlayerPaused && sameSurah && sameArtist) {
+                audioCubit.resume();
+                return;
               }
 
-              final state = context.read<GetDataCubit>().state;
-
+              /// load audio baru
               context.read<GetAudioCubit>().getAudio(
-                number: state.numberSurah,
-                artist: state.identifier,
+                number: currentSurah,
+                artist: currentArtist,
               );
+
+              print('artist ==> $currentArtist');
             },
           );
         },

@@ -10,6 +10,7 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   final AudioPlayer _player = AudioPlayer();
 
   int? _currentSurah;
+  String? _currentArtist;
   int _currentAyah = 1;
   int _totalAyah = 0;
 
@@ -21,8 +22,12 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   StreamSubscription? _durationSub;
   StreamSubscription? _indexSub;
 
+  bool get isPlaying => _player.playing;
+  String? get currentArtist => _currentArtist;
+  int? get currentSurah => _currentSurah;
+
   AudioPlayerCubit() : super(AudioPlayerInitial()) {
-    _player.playerStateStream.listen((playerState) {
+    _playerStateSub = _player.playerStateStream.listen((playerState) {
       final processingState = playerState.processingState;
       final playing = playerState.playing;
 
@@ -111,11 +116,14 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   Future<void> play({
     required List<String> urls,
     required int surahNumber,
+    required String artistIdentifier,
   }) async {
     try {
       emit(AudioPlayerLoading());
 
       _currentSurah = surahNumber;
+      _currentArtist = artistIdentifier;
+
       _currentAyah = 1;
       _totalAyah = urls.length;
 
@@ -177,6 +185,7 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     await _player.stop();
 
     _currentSurah = null;
+    _currentArtist = null;
     _currentAyah = 1;
     _totalAyah = 0;
     _position = Duration.zero;
@@ -184,10 +193,6 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
     emit(AudioPlayerInitial());
   }
-
-  bool get isPlaying => _player.playing;
-
-  int? get currentSurah => _currentSurah;
 
   @override
   Future<void> close() async {

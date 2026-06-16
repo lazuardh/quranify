@@ -69,6 +69,10 @@ class _ChangedArtistWrapper extends StatelessWidget {
                         context.read<GetDataCubit>().setIdentifier(
                           identifier: artists?[index].identifier ?? '',
                         );
+
+                        context.read<GetDataCubit>().setName(
+                          name: artists?[index].englishName ?? '',
+                        );
                       },
                     );
                   },
