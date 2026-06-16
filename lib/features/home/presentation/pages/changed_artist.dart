@@ -35,15 +35,17 @@ class _ChangedArtistWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Artists',
-          style: AppTextStyle.medium.copyWith(fontSize: 18),
-        ),
-      ),
-      body: Column(
+      appBar: AppBar(automaticallyImplyLeading: false),
+      body: ColumnPadding(
+        padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text('Artists', style: AppTextStyle.bold.copyWith(fontSize: 18)),
+          Text(
+            TextConstant.explanationArtist,
+            style: AppTextStyle.regular.copyWith(fontSize: 12),
+          ),
+          Gap(height: 10),
           CustomSearchWithoutSuffixIcon(
             onChanged: (value) {
               context.read<GetArtistsCubit>().searchArtists(value);
@@ -53,7 +55,6 @@ class _ChangedArtistWrapper extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemCount: artists?.length ?? 0,
-              padding: EdgeInsets.symmetric(horizontal: 10),
               itemBuilder: (context, index) {
                 return Builder(
                   builder: (context) {
@@ -66,13 +67,22 @@ class _ChangedArtistWrapper extends StatelessWidget {
                       title: artists?[index].name ?? 'No Artist found',
                       subtitle: artists?[index].englishName ?? '',
                       onTap: () {
-                        context.read<GetDataCubit>().setIdentifier(
+                        context.read<GetDataCubit>().changedArtist(
                           identifier: artists?[index].identifier ?? '',
-                        );
-
-                        context.read<GetDataCubit>().setName(
                           name: artists?[index].englishName ?? '',
                         );
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Change artist ${artists?[index].englishName ?? ''} ",
+                              ),
+                            ),
+                          );
+                        }
+
+                        Navigator.pop(context);
                       },
                     );
                   },
@@ -106,13 +116,25 @@ class _ArtistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     return Card(
+      shape: _isSelected
+          ? OutlineInputBorder(
+              borderSide: BorderSide(
+                color: theme.tertiary.withValues(),
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            )
+          : null,
       child: ListTile(
-        leading: CircleAvatar(maxRadius: 25, child: Icon(Icons.mic, size: 20)),
+        leading: _avatar(theme, selected: _isSelected),
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         title: Text(_title, style: AppTextStyle.medium.copyWith(fontSize: 14)),
         subtitle: Text(
           _subtitle,
-          style: AppTextStyle.medium.copyWith(fontSize: 12),
+          style: AppTextStyle.regular.copyWith(
+            fontSize: 12,
+            color: theme.tertiary,
+          ),
         ),
         trailing: ConstrainedBox(
           constraints: BoxConstraints(
@@ -123,6 +145,42 @@ class _ArtistCard extends StatelessWidget {
               : SizedBox.shrink(),
         ),
         onTap: _onTap,
+      ),
+    );
+  }
+
+  Widget _avatar(ColorScheme theme, {required bool selected}) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 60, maxHeight: 60),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: theme.tertiary),
+            ),
+            child: CustomImageWrapper(
+              image: AppIcons.avatar,
+              isNetworkImage: false,
+              width: 50,
+              height: 50,
+            ),
+          ),
+          selected
+              ? Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: theme.tertiary,
+                    ),
+                    child: Icon(Icons.mic, size: 12),
+                  ),
+                )
+              : SizedBox.shrink(),
+        ],
       ),
     );
   }

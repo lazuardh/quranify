@@ -36,15 +36,12 @@ class CustomSearchWithoutSuffixIcon extends StatelessWidget {
       constraints: BoxConstraints(
         maxHeight: ResponsiveUtils(context).getMediaQueryHeight() * 0.1,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: TextFormField(
-          decoration: InputDecoration(
-            hint: Text(TextConstant.search, softWrap: true),
-            prefixIcon: Icon(Icons.search),
-          ),
-          onChanged: onChanged,
+      child: TextFormField(
+        decoration: InputDecoration(
+          hint: Text(TextConstant.search, softWrap: true),
+          prefixIcon: Icon(Icons.search),
         ),
+        onChanged: onChanged,
       ),
     );
   }

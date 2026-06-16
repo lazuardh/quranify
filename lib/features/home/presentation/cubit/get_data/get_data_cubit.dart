@@ -51,16 +51,18 @@ class GetDataCubit extends Cubit<GetDataState> {
     );
   }
 
-  Future<void> setIdentifier({required String identifier}) async {
-    await prefs.setString(_identifierKey, identifier);
+  Future<void> changedArtist({
+    required String identifier,
+    required String name,
+  }) async {
+    emit(state.copyWith(isLoading: true));
 
-    emit(state.copyWith(identifier: identifier));
-  }
+    await Future.wait(cleanUp: (successValue) => {}, [
+      prefs.setString(_identifierKey, identifier),
+      prefs.setString(_nameKey, name),
+    ]);
 
-  Future<void> setName({required String name}) async {
-    await prefs.setString(_nameKey, name);
-
-    emit(state.copyWith(name: name));
+    emit(state.copyWith(identifier: identifier, name: name, isLoading: false));
   }
 
   Future<void> setNumberSurah({required int? numberSurah}) async {
@@ -68,6 +70,6 @@ class GetDataCubit extends Cubit<GetDataState> {
 
     await prefs.setInt(_numberKey, numberSurah);
 
-    emit(state.copyWith(numberSurah: numberSurah));
+    emit(state.copyWith(numberSurah: numberSurah, isLoading: true));
   }
 }

@@ -111,6 +111,18 @@ class QuranifyTheme {
         ),
       ),
 
+      snackBarTheme: theme.snackBarTheme.copyWith(
+        width: 200,
+        behavior: SnackBarBehavior.floating,
+        elevation: 0,
+        backgroundColor: AppColors.n400,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        contentTextStyle: AppTextStyle.medium.copyWith(
+          color: Colors.white,
+          fontSize: 14,
+        ),
+      ),
+
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: AppColors.secondary,
         linearTrackColor: AppColors.n600,
