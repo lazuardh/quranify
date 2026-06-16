@@ -44,7 +44,7 @@ class QuranSummaryCard extends StatelessWidget {
     return _SummeryWrapper(
       currentAyah: state.lastRead.ayahNumber,
       currentSurah: state.lastRead.surahName,
-      progress: result.percentage.round(),
+      progress: result.percentage,
     );
   }
 }
@@ -59,7 +59,7 @@ class _SummeryWrapper extends StatelessWidget {
   const _SummeryWrapper({
     String? currentSurah,
     int? currentAyah,
-    int progress = 0,
+    double progress = 0.0,
   }) : _currentAyah = currentAyah,
        _currentSurah = currentSurah,
        _progress = progress,
@@ -67,7 +67,7 @@ class _SummeryWrapper extends StatelessWidget {
 
   final String? _currentSurah;
   final int? _currentAyah;
-  final int _progress;
+  final double _progress;
   final bool isEmpty;
 
   @override
@@ -125,7 +125,7 @@ class _LastReadCard extends StatelessWidget {
                     style: AppTextStyle.regular.copyWith(fontSize: 18),
                   ),
                   Text(
-                    _isEmpty ? "No \nHistory" : _surah ?? '',
+                    _isEmpty ? "No \nHistory" : 'QS. $_surah',
                     style: AppTextStyle.semiBold.copyWith(
                       fontSize: 28,
                       color: theme.tertiary,
@@ -150,16 +150,17 @@ class _LastReadCard extends StatelessWidget {
 class _KhatamProgressCard extends StatelessWidget {
   const _KhatamProgressCard({
     String summary = "KHATAM \nGOALS",
-    required int progress,
+    required double progress,
   }) : _summary = summary,
        _progress = progress;
 
   final String _summary;
-  final int _progress;
+  final double _progress;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
+    print(_progress);
     return Card(
       child: Container(
         padding: EdgeInsets.all(15),
@@ -186,21 +187,46 @@ class _KhatamProgressCard extends StatelessWidget {
                     style: AppTextStyle.regular.copyWith(fontSize: 18),
                   ),
                   Text(
-                    "$_progress %",
+                    "${_progress.toStringAsFixed(2)} %",
                     style: AppTextStyle.semiBold.copyWith(
                       fontSize: 28,
-                      color: theme.secondary,
+                      color: _progress >= 100
+                          ? AppColors.success
+                          : _progress >= 75
+                          ? AppColors.tertiaryDark
+                          : _progress >= 50
+                          ? AppColors.tertiary
+                          : _progress >= 25
+                          ? AppColors.tertiaryLight
+                          : AppColors.secondaryLight,
                     ),
                   ),
                   Text(
                     "Complete",
                     style: AppTextStyle.semiBold.copyWith(
                       fontSize: 20,
-                      color: theme.secondary,
+                      color: _progress >= 100
+                          ? AppColors.success
+                          : _progress >= 75
+                          ? AppColors.tertiaryDark
+                          : _progress >= 50
+                          ? AppColors.tertiary
+                          : _progress >= 25
+                          ? AppColors.tertiaryLight
+                          : AppColors.secondaryLight,
                     ),
                   ),
                   const Gap(height: 5),
-                  LinearProgressIndicator(value: _progress / 100),
+                  LinearProgressIndicator(
+                    value: _progress / 100,
+                    color: _progress >= 100
+                        ? AppColors.success
+                        : _progress >= 75
+                        ? AppColors.tertiaryDark
+                        : _progress >= 50
+                        ? AppColors.tertiary
+                        : AppColors.tertiaryLight,
+                  ),
                 ],
               ),
             ),
