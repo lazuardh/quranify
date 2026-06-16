@@ -92,13 +92,13 @@ class _DetailHomePageWrapper extends StatelessWidget {
                   _savedCurrentData(
                     context,
                     ayahNumber: ayah.numberInSurah,
-                    numberSurah: ayah.number,
+                    numberSurah: _detailSurah.number,
                     surahName: _detailSurah.name,
                   );
                 },
                 arabicText: ayah.arabicText,
                 numberInSurah: ayah.numberInSurah,
-                surahNumber: _detailSurah.number ?? 0,
+                surahNumber: _detailSurah.number!,
                 translationText: ayah.translationText,
               ),
             ],
@@ -115,8 +115,21 @@ class _DetailHomePageWrapper extends StatelessWidget {
     String? surahName,
     int? ayahNumber,
   }) async {
+    final lastReadState = context.read<LastReadCubit>().state;
+
+    String message = 'Set QS. $surahName verse $ayahNumber as your last read?';
+
+    if (lastReadState is LastReadLoaded) {
+      final current = lastReadState.lastRead;
+
+      message =
+          'Last read will be changed from '
+          'QS. ${current.surahName} verse ${current.ayahNumber} '
+          'to QS. $surahName verse $ayahNumber. Continue?';
+    }
+
     context.confirmationDialog(
-      message: 'Are you sure you want to bookmark this verse?',
+      message: message,
       onPressed: () async {
         Navigator.pop(context); // tutup dialog dulu
 
@@ -130,9 +143,7 @@ class _DetailHomePageWrapper extends StatelessWidget {
 
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Last read saved $surahName ayah $numberSurah"),
-            ),
+            SnackBar(content: Text("Saved $surahName ayah $ayahNumber")),
           );
         }
       },
