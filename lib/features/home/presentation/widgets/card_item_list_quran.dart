@@ -75,7 +75,7 @@ class _ItemQuran extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     return ListTile(
-      leading: _avatar(theme, number: _number),
+      leading: AyahMarker(number: _number),
       contentPadding: EdgeInsets.only(
         left: 20,
         bottom: MediaQuery.paddingOf(context).bottom - 13,
@@ -117,34 +117,6 @@ class _ItemQuran extends StatelessWidget {
         ],
       ),
       onTap: _onTap,
-    );
-  }
-
-  Widget _avatar(ColorScheme theme, {required int number}) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 45, maxHeight: 50),
-      child: Stack(
-        children: [
-          CustomImageWrapper(
-            image: AppIcons.number,
-            isNetworkImage: false,
-            fit: BoxFit.cover,
-            width: 45,
-            height: 50,
-          ),
-
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              '$number',
-              style: AppTextStyle.bold.copyWith(
-                fontSize: 10,
-                color: AppColors.ink,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

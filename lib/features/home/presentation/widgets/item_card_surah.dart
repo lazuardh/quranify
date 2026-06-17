@@ -46,14 +46,7 @@ class ItemCardSurah extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: theme.tertiary),
-                    ),
-                    child: Text(_numberInSurah.toString()),
-                  ),
+                  AyahMarker(number: _numberInSurah),
 
                   BlocSelector<LastReadCubit, LastReadState, LastReadEntity?>(
                     selector: (state) {
