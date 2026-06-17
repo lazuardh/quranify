@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../lib.dart';
 
 class CustomSearch extends StatelessWidget {
-  const CustomSearch({super.key});
+  const CustomSearch({super.key, required this.onChanged});
+
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class CustomSearch extends StatelessWidget {
             prefixIcon: Icon(Icons.search),
             suffixIcon: IconButton(onPressed: () {}, icon: Icon(Icons.mic)),
           ),
+          onChanged: onChanged,
         ),
       ),
     );

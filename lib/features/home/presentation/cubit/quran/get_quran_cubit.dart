@@ -9,16 +9,35 @@ class GetQuranCubit extends Cubit<GetQuranState> {
 
   GetQuranCubit(this._allSongsRepository) : super(GetQuranInitial());
 
+  List<QuranEntity> _qurans = [];
+
   Future<void> getQuran({bool isLoading = true}) async {
     emit(GetQuranLoading(isLoading: isLoading));
 
     final response = await _allSongsRepository.getQuranApi();
 
     emit(
-      response.fold(
-        (failure) => GetQuranError(failure),
-        (list) => GetQuranLoaded(listQuranEntity: list.data),
-      ),
+      response.fold((failure) => GetQuranError(failure), (list) {
+        _qurans = list.data ?? [];
+        return GetQuranLoaded(qurans: _qurans, filtered: _qurans);
+      }),
     );
+  }
+
+  void searchQurans(String keyword) {
+    if (state is! GetQuranLoaded) return;
+
+    final query = keyword.trim().toLowerCase();
+
+    if (query.isEmpty) {
+      emit(GetQuranLoaded(qurans: _qurans, filtered: _qurans));
+      return;
+    }
+
+    final filtered = _qurans
+        .where((quran) => quran.name.toLowerCase().contains(query))
+        .toList();
+
+    emit(GetQuranLoaded(qurans: _qurans, filtered: filtered, keyword: query));
   }
 }

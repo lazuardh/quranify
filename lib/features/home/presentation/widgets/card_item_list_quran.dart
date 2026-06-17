@@ -89,28 +89,29 @@ class _ItemQuran extends StatelessWidget {
       ),
       subtitle: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.tertiaryLight.withOpacity(0.2),
-              border: Border.all(color: theme.tertiary, width: 0.5),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Text(
-                _relevationType,
-                style: AppTextStyle.regular.copyWith(
-                  fontSize: 10,
-                  color: theme.onSecondary,
-                ),
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              _relevationType,
+              style: AppTextStyle.regular.copyWith(
+                fontSize: 10,
+                color: theme.tertiary,
               ),
             ),
           ),
-          SizedBox(width: 10),
+          Container(
+            width: 5,
+            height: 5,
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.n500,
+            ),
+          ),
           Text(
-            '$_numberOfAyah Ayah',
+            '$_numberOfAyah Ayahs',
             style: AppTextStyle.medium.copyWith(
-              fontSize: 12,
+              fontSize: 10,
               color: theme.onSecondary,
             ),
           ),

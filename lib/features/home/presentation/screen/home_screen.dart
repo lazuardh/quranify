@@ -34,10 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocConsumer<GetQuranCubit, GetQuranState>(
         builder: (context, state) {
           return _HomeScreenWrapper(
-            listQuran: state is GetQuranLoaded
-                ? state.listQuranEntity ?? []
-                : [],
+            qurans: state is GetQuranLoaded ? state.filtered ?? [] : [],
             isLoading: state is GetQuranLoading && state.isLoading,
+            isSearch: state is GetQuranLoaded ? state.isSearching : false,
           );
         },
         listener: (context, state) {
@@ -53,13 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class _HomeScreenWrapper extends StatelessWidget {
   const _HomeScreenWrapper({
-    required List<QuranEntity> listQuran,
+    required List<QuranEntity> qurans,
     required bool isLoading,
-  }) : _listQuran = listQuran,
-       _isLoading = isLoading;
+    bool isSearch = false,
+  }) : _qurans = qurans,
+       _isLoading = isLoading,
+       _isSearch = isSearch;
 
-  final List<QuranEntity> _listQuran;
+  final List<QuranEntity> _qurans;
   final bool _isLoading;
+  final bool _isSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +76,17 @@ class _HomeScreenWrapper extends StatelessWidget {
         padding: EdgeInsetsGeometry.all(10),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CustomSearch(),
-          const CustomSchrollWrapper(),
-          QuranSummaryCard(qurans: _listQuran),
-          _titleContent(),
-          Expanded(child: CardItemListQuran(listQuran: _listQuran)),
+          CustomSearch(
+            onChanged: (value) =>
+                context.read<GetQuranCubit>().searchQurans(value),
+          ),
+          _isSearch ? const SizedBox.shrink() : const CustomSchrollWrapper(),
+          _isSearch
+              ? const SizedBox.shrink()
+              : QuranSummaryCard(qurans: _qurans),
+          _isSearch ? const SizedBox.shrink() : _titleContent(),
+          _isSearch ? const Gap(height: 10) : const SizedBox.shrink(),
+          Expanded(child: CardItemListQuran(listQuran: _qurans)),
         ],
       ),
     );
