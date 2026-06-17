@@ -17,6 +17,7 @@ class CardItemListQuran extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10),
       physics: const ClampingScrollPhysics(),
       prototypeItem: _ItemQuran(
+        number: 1,
         name: 'Al-fatihah',
         relevationType: 'meccah',
         numberOfAyah: 7,
@@ -26,6 +27,7 @@ class CardItemListQuran extends StatelessWidget {
         return RepaintBoundary(
           child: Card(
             child: _ItemQuran(
+              number: _listQuran[index].number ?? 0,
               name: _listQuran[index].name,
               relevationType: _listQuran[index].relevationType,
               numberOfAyah: _listQuran[index].numberOfAyat,
@@ -56,22 +58,28 @@ class _ItemQuran extends StatelessWidget {
     required String relevationType,
     int? numberOfAyah,
     void Function()? onTap,
+    required int number,
   }) : _name = name,
        _relevationType = relevationType,
        _numberOfAyah = numberOfAyah,
-       _onTap = onTap;
+       _onTap = onTap,
+       _number = number;
 
   final String _name;
   final String _relevationType;
   final int? _numberOfAyah;
   final void Function()? _onTap;
+  final int _number;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     return ListTile(
-      leading: Icon(Icons.ac_unit_sharp, size: 40, color: theme.tertiary),
-      contentPadding: EdgeInsets.all(5),
+      leading: _avatar(theme, number: _number),
+      contentPadding: EdgeInsets.only(
+        left: 20,
+        bottom: MediaQuery.paddingOf(context).bottom - 13,
+      ),
       title: Text(
         _name,
         style: AppTextStyle.bold.copyWith(
@@ -82,23 +90,26 @@ class _ItemQuran extends StatelessWidget {
       subtitle: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(2),
             decoration: BoxDecoration(
-              border: Border.all(color: theme.tertiary),
+              color: AppColors.tertiaryLight.withOpacity(0.2),
+              border: Border.all(color: theme.tertiary, width: 0.5),
               borderRadius: BorderRadius.circular(5),
             ),
-            child: Text(
-              _relevationType,
-              style: AppTextStyle.regular.copyWith(
-                fontSize: 10,
-                color: theme.onSecondary,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(
+                _relevationType,
+                style: AppTextStyle.regular.copyWith(
+                  fontSize: 10,
+                  color: theme.onSecondary,
+                ),
               ),
             ),
           ),
           SizedBox(width: 10),
           Text(
             '$_numberOfAyah Ayah',
-            style: AppTextStyle.regular.copyWith(
+            style: AppTextStyle.medium.copyWith(
               fontSize: 12,
               color: theme.onSecondary,
             ),
@@ -106,6 +117,34 @@ class _ItemQuran extends StatelessWidget {
         ],
       ),
       onTap: _onTap,
+    );
+  }
+
+  Widget _avatar(ColorScheme theme, {required int number}) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 45, maxHeight: 50),
+      child: Stack(
+        children: [
+          CustomImageWrapper(
+            image: AppIcons.number,
+            isNetworkImage: false,
+            fit: BoxFit.cover,
+            width: 45,
+            height: 50,
+          ),
+
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              '$number',
+              style: AppTextStyle.bold.copyWith(
+                fontSize: 10,
+                color: AppColors.ink,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

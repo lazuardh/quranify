@@ -70,7 +70,8 @@ class _HomeScreenWrapper extends StatelessWidget {
           style: AppTextStyle.semiBold.copyWith(fontSize: 16),
         ),
       ),
-      body: Column(
+      body: ColumnPadding(
+        padding: EdgeInsetsGeometry.all(10),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const CustomSearch(),
