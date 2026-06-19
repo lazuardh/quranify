@@ -94,6 +94,8 @@ class _DetailHomePageWrapper extends StatelessWidget {
                     ayahNumber: ayah.numberInSurah,
                     numberSurah: _detailSurah.number,
                     surahName: _detailSurah.name,
+                    arabicText: ayah.arabicText,
+                    translationText: ayah.translationText,
                   );
                 },
                 arabicText: ayah.arabicText,
@@ -114,6 +116,8 @@ class _DetailHomePageWrapper extends StatelessWidget {
     int? numberSurah,
     String? surahName,
     int? ayahNumber,
+    String? arabicText,
+    String? translationText,
   }) async {
     final lastReadState = context.read<LastReadCubit>().state;
 
@@ -138,6 +142,17 @@ class _DetailHomePageWrapper extends StatelessWidget {
             surahNumber: numberSurah ?? 0,
             surahName: surahName ?? '',
             ayahNumber: ayahNumber ?? 0,
+          ),
+        );
+
+        context.read<BookmarkCubit>().saveBookmark(
+          BookmarkEntity(
+            number: numberSurah ?? 0,
+            name: surahName ?? '',
+            arabicText: arabicText ?? '',
+            translationText: translationText ?? '',
+            ayahNumber: ayahNumber ?? 0,
+            createdAt: DateTime.now(),
           ),
         );
 

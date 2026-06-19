@@ -9,6 +9,7 @@ class LastReadLocalDataSource {
   const LastReadLocalDataSource(this.prefs);
 
   static const _key = 'last_read';
+  static const _bookmarkKey = 'bookmark';
 
   Future<void> saveLastRead(LastReadModel model) async {
     await prefs.setString(_key, jsonEncode(model.toJson()));
@@ -20,5 +21,17 @@ class LastReadLocalDataSource {
     if (data == null) return null;
 
     return LastReadModel.fromJson(jsonDecode(data));
+  }
+
+  Future<void> saveBookmark(BookmarkModel model) async {
+    await prefs.setString(_bookmarkKey, jsonEncode(model.toJson()));
+  }
+
+  BookmarkModel? getLastBookmark() {
+    final data = prefs.getString(_bookmarkKey);
+
+    if (data == null) return null;
+
+    return BookmarkModel.fromJson(jsonDecode(data));
   }
 }

@@ -5,4 +5,5 @@ class AppIcons {
   static const avatar = '$_baseIconAssets/man.png';
   static const muslim = '$_baseIconAssets/crescent.png';
   static const number = '$_baseIconAssets/star.png';
+  static const mosque = '$_baseIconAssets/crescent.png';
 }

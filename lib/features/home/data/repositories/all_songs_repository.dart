@@ -12,8 +12,6 @@ class AllSongsRepository with BaseRepository {
     return catchOrThrow(() async {
       final response = await _remoteDataSource.fetchDataApi();
 
-      print('this response ==> $response');
-
       return BaseApiResponseEntity.fromBaseApiResponseModel(
         response,
         data: response.data?.map((e) => e.toEntity()).toList(),

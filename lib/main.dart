@@ -19,9 +19,11 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => getIt<LastReadCubit>()),
         BlocProvider(create: (_) => getIt<GetQuranCubit>()),
-        BlocProvider(create: (context) => getIt<GetDataCubit>()),
-        BlocProvider(create: (context) => getIt<GetAudioCubit>()),
-        BlocProvider(create: (context) => getIt<AudioPlayerCubit>()),
+        BlocProvider(create: (_) => getIt<GetDataCubit>()),
+        BlocProvider(create: (_) => getIt<GetAudioCubit>()),
+        BlocProvider(create: (_) => getIt<AudioPlayerCubit>()),
+        BlocProvider(create: (_) => getIt<HomeCubit>()),
+        BlocProvider(create: (_) => getIt<BookmarkCubit>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

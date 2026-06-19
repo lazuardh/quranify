@@ -13,13 +13,21 @@ Future<void> init() async {
   _artists();
   _audio();
   _getData();
+  _homeTab();
+  _bookmark();
 }
 
 Future<void> _core() async {
   getIt.registerLazySingleton<http.Client>(() => http.Client());
   final sharedPreferences = await SharedPreferencesWithCache.create(
     cacheOptions: SharedPreferencesWithCacheOptions(
-      allowList: <String>{'identifier', 'number', 'last_read', 'name'},
+      allowList: <String>{
+        'identifier',
+        'number',
+        'last_read',
+        'name',
+        'bookmark',
+      },
     ),
   );
 
@@ -59,4 +67,12 @@ void _audio() {
 
 void _getData() {
   getIt.registerFactory(() => GetDataCubit(prefs: getIt(), artists: getIt()));
+}
+
+void _homeTab() {
+  getIt.registerFactory(() => HomeCubit());
+}
+
+void _bookmark() {
+  getIt.registerFactory(() => BookmarkCubit(getIt()));
 }

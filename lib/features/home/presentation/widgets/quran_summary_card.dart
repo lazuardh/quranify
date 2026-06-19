@@ -160,7 +160,6 @@ class _KhatamProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    print(_progress);
     return Card(
       child: Container(
         padding: EdgeInsets.all(15),

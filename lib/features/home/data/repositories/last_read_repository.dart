@@ -3,6 +3,8 @@ import 'package:quranify/lib.dart';
 abstract class LastReadRepository {
   Future<void> saveLastRead(LastReadEntity read);
   LastReadEntity? getLastRead();
+  Future<void> saveBookmark(BookmarkEntity save);
+  BookmarkEntity? getBookmark();
 }
 
 class LastReadRepositoryImpl implements LastReadRepository {
@@ -21,6 +23,25 @@ class LastReadRepositoryImpl implements LastReadRepository {
         surahNumber: entity.surahNumber,
         surahName: entity.surahName,
         ayahNumber: entity.ayahNumber,
+      ),
+    );
+  }
+
+  @override
+  BookmarkEntity? getBookmark() {
+    return local.getLastBookmark()?.toEntity();
+  }
+
+  @override
+  Future<void> saveBookmark(BookmarkEntity save) async {
+    await local.saveBookmark(
+      BookmarkModel(
+        number: save.number,
+        name: save.name,
+        arabicText: save.arabicText,
+        translationText: save.translationText,
+        ayahNumber: save.ayahNumber,
+        createdAt: save.createdAt,
       ),
     );
   }

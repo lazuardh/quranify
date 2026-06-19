@@ -95,8 +95,6 @@ class _PlayQuranState extends State<PlayQuran> {
                 number: currentSurah,
                 artist: currentArtist,
               );
-
-              print('artist ==> $currentArtist');
             },
           );
         },
