@@ -92,9 +92,9 @@ class _HomeScreenWrapper extends StatelessWidget {
                     child: SurahContent(qurans: _qurans, isSearch: _isSearch),
                   );
                 case HomeTab.juz:
-                  return Container();
+                  return Expanded(child: const JuzContent());
                 case HomeTab.bookmark:
-                  return BookmarkContent();
+                  return const BookmarkContent();
               }
             },
           ),
@@ -128,6 +128,43 @@ class SurahContent extends StatelessWidget {
       child: Text(
         'Surah List',
         style: AppTextStyle.bold.copyWith(fontSize: 18),
+      ),
+    );
+  }
+}
+
+class JuzContent extends StatelessWidget {
+  const JuzContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.n700,
+              border: Border.all(color: AppColors.inkSoft),
+              shape: BoxShape.circle,
+            ),
+            child: const CustomImageWrapper(
+              image: AppIcons.mosque,
+              isNetworkImage: false,
+            ),
+          ),
+          const Gap(height: 10),
+          Text('Coming Soon', style: AppTextStyle.bold.copyWith(fontSize: 18)),
+          const Gap(height: 5),
+          Text(
+            'Were working on this feature. Stay tuned for upcoming updates.',
+            style: AppTextStyle.bold.copyWith(fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
