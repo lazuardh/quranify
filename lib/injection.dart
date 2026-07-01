@@ -15,6 +15,7 @@ Future<void> init() async {
   _getData();
   _homeTab();
   _bookmark();
+  _specchToText();
 }
 
 Future<void> _core() async {
@@ -75,4 +76,8 @@ void _homeTab() {
 
 void _bookmark() {
   getIt.registerFactory(() => BookmarkCubit(getIt()));
+}
+
+void _specchToText() {
+  getIt.registerFactory(() => SpeechToTextCubit());
 }

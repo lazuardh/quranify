@@ -7,3 +7,4 @@ export 'audio_player/audio_player_cubit.dart';
 export 'get_data/get_data_cubit.dart';
 export 'home_cubit/home_cubit_cubit.dart';
 export 'bookmark_cubit/bookmark_cubit.dart';
+export 'speech_to_text/speech_to_text_cubit.dart';

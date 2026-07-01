@@ -45,6 +45,7 @@ dependencies:
   infinite_scroll_pagination: ^5.1.1
   shared_preferences: ^2.5.5
   just_audio: ^0.10.5
+  speech_to_text: ^7.4.0
 
 dev_dependencies:
   flutter_test:

@@ -40,4 +40,6 @@ class GetQuranCubit extends Cubit<GetQuranState> {
 
     emit(GetQuranLoaded(qurans: _qurans, filtered: filtered, keyword: query));
   }
+
+  List<String> get surahNames => _qurans.map((e) => e.name).toList();
 }

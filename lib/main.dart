@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => getIt<AudioPlayerCubit>()),
         BlocProvider(create: (_) => getIt<HomeCubit>()),
         BlocProvider(create: (_) => getIt<BookmarkCubit>()),
+        BlocProvider(create: (_) => getIt<SpeechToTextCubit>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

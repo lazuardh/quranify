@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final GetQuranCubit _cubit;
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     context.read<LastReadCubit>().loadLastRead();
     context.read<BookmarkCubit>().load();
+    context.read<SpeechToTextCubit>().initialize();
     _cubit.getQuran();
     super.initState();
   }
@@ -25,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _cubit.close();
+    searchController.dispose();
     super.dispose();
   }
 
@@ -35,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocConsumer<GetQuranCubit, GetQuranState>(
         builder: (context, state) {
           return _HomeScreenWrapper(
+            searchController: searchController,
             qurans: state is GetQuranLoaded ? state.filtered ?? [] : [],
             isLoading: state is GetQuranLoading && state.isLoading,
             isSearch: state is GetQuranLoaded ? state.isSearching : false,
@@ -56,13 +60,16 @@ class _HomeScreenWrapper extends StatelessWidget {
     required List<QuranEntity> qurans,
     required bool isLoading,
     bool isSearch = false,
+    TextEditingController? searchController,
   }) : _qurans = qurans,
        _isLoading = isLoading,
-       _isSearch = isSearch;
+       _isSearch = isSearch,
+       _searchController = searchController;
 
   final List<QuranEntity> _qurans;
   final bool _isLoading;
   final bool _isSearch;
+  final TextEditingController? _searchController;
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +84,65 @@ class _HomeScreenWrapper extends StatelessWidget {
         padding: const EdgeInsetsGeometry.all(10),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomSearch(
-            onChanged: (value) =>
-                context.read<GetQuranCubit>().searchQurans(value),
+          // BlocListener<SpeechToTextCubit, SpeechToTextState>(
+          //   listener: (context, state) {
+          //     if (state.recognizedWords.isEmpty) return;
+
+          //     final quranCubit = context.read<GetQuranCubit>();
+
+          //     final corrected = VoiceSearchHelper.findBestMatch(
+          //       query: state.recognizedWords,
+          //       candidates: quranCubit.surahNames,
+          //     );
+
+          //     if (corrected != null) {
+          //       _searchController?.text = corrected;
+          //       quranCubit.searchQurans(corrected);
+          //     }
+          //   },
+          //   child: CustomSearch(
+          //     controller: _searchController,
+          //     isvoiceActif: ,
+          //     onChanged: (value) =>
+          //         context.read<GetQuranCubit>().searchQurans(value),
+          //     onSpeech: () {
+          //       context.read<SpeechToTextCubit>().startListening();
+          //     },
+          //   ),
+          // ),
+          BlocConsumer<SpeechToTextCubit, SpeechToTextState>(
+            listener: (context, state) {
+              if (state.recognizedWords.isEmpty) return;
+
+              final quranCubit = context.read<GetQuranCubit>();
+
+              final corrected = VoiceSearchHelper.findBestMatch(
+                query: state.recognizedWords,
+                candidates: quranCubit.surahNames,
+              );
+
+              if (corrected != null) {
+                _searchController?.text = corrected;
+                quranCubit.searchQurans(corrected);
+              }
+            },
+            builder: (context, state) {
+              return CustomSearch(
+                controller: _searchController,
+                isvoiceActif: state.isListening,
+                onChanged: (value) =>
+                    context.read<GetQuranCubit>().searchQurans(value),
+                onSpeech: () {
+                  final cubit = context.read<SpeechToTextCubit>();
+
+                  if (state.isListening) {
+                    cubit.stopListening();
+                  } else {
+                    cubit.startListening();
+                  }
+                },
+              );
+            },
           ),
 
           const HomeTabBar(),
